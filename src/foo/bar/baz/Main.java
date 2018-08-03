@@ -9,6 +9,9 @@ public class Main {
 
     public static void main(String[] args) {
         Solution solution = new StandaloneSolution();
-        System.out.println(solution.leibnizPi(5));
+        Double result1 = solution.leibnizPi(5);
+        Double result2 = solution.leibnizPi2(5).doubleValue();
+        System.out.println("result1 = " + result1);
+        System.out.println("result2 = " + result2);
     }
 }
