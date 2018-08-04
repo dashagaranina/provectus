@@ -1,39 +1,51 @@
 package foo.bar.baz;
 
-import foo.bar.baz.impl.StandaloneSolution;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class Consumer implements Runnable {
+public class Consumer implements Callable<BigDecimal> {
 
     private BlockingQueue<Integer> blockingQueue;
-    private String name;
-    private Integer count = 0;
+    private volatile Double epsilon;
+    private AtomicReference<BigDecimal> s1 = new AtomicReference<>(BigDecimal.ZERO);
 
-    public Consumer(BlockingQueue<Integer> blockingQueue, String name) {
+    private AtomicReference<BigDecimal> s2 = new AtomicReference<>(BigDecimal.ZERO);
+
+
+    public Consumer(BlockingQueue<Integer> blockingQueue, Integer accuracy) {
         this.blockingQueue = blockingQueue;
-        this.name=name;
+        this.epsilon = Math.pow(10, -accuracy);
     }
 
     @Override
-    public void run() {
-        while (true){
+    public BigDecimal call() {
+        do {
             try {
-                if (blockingQueue.isEmpty()){
-                    Thread.sleep(50);
-                    if (blockingQueue.isEmpty()) {
-                        System.out.println("====================="+name + " got result " + count + " times");
-                        break;
-                    }
+                Integer n = blockingQueue.take();
+//                System.out.println("n was taken = " + n);
+                if (n%2 != 0) {
+                    s1.set(s2.get().add(calc(BigDecimal.valueOf(n))));       //s1=s2+(4/(2*n-1))
+//                    System.out.println((s1.get().subtract(s2.get())).doubleValue());
+                } else {
+                    s2.set(s1.get().subtract(calc(BigDecimal.valueOf(n))));       //s2=s1-(4/(2*n-1))
+//                    System.out.println((s1.get().subtract(s2.get())).doubleValue());
                 }
-                Integer acc = blockingQueue.take();
-                System.out.println(name + " takes = "+ acc);
-                Solution solution = new StandaloneSolution();
-                System.out.println(name + " result (accuracy = " + acc + ") " + solution.leibnizPi2(acc));
-                count++;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        } while ((s1.get().subtract(s2.get())).doubleValue() >= epsilon);
+
+        System.out.println("done");
+        BigDecimal result = s1.get().add(s2.get());
+        return result.divide(BigDecimal.valueOf(2), 100, RoundingMode.HALF_UP);
+    }
+
+    private synchronized BigDecimal calc(BigDecimal n) {
+        BigDecimal temp1 = BigDecimal.valueOf(2).multiply(n).subtract(BigDecimal.ONE); // 2*n-1
+        return BigDecimal.valueOf(4).divide(temp1,100, RoundingMode.HALF_UP);//4/(2*n-1)
     }
 }
