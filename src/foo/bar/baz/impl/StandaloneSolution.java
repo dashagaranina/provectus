@@ -6,27 +6,51 @@ import foo.bar.baz.Solution;
 
 import java.math.BigDecimal;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class StandaloneSolution implements Solution {
 
-    private BlockingQueue<Integer> blockingQueue = new ArrayBlockingQueue<>(10);
+	private BlockingQueue<Integer> blockingQueue = new ArrayBlockingQueue<>(10);
 
-    @Override
-    public Future<BigDecimal> leidnizPi(Integer accuracy) {
+	private volatile AtomicReference<BigDecimal> s1 = new AtomicReference<>(BigDecimal.ZERO);
+	private volatile AtomicReference<BigDecimal> s2 = new AtomicReference<>(BigDecimal.ZERO);
 
-        ExecutorService executor = Executors.newFixedThreadPool(4);
+	@Override
+	public CompletableFuture<BigDecimal> leidnizPi(Integer accuracy) {
 
-        Future<BigDecimal> future = executor.submit(new Consumer(blockingQueue, accuracy));
 
-        Thread producer = new Thread(new Producer(blockingQueue));
+		/*try {
+			ExecutorService executor = Executors.newFixedThreadPool(4);
 
-        producer.start();
+			Producer producer = new Producer(blockingQueue);
+			executor.submit(producer);
+			List<Consumer> consumers = new ArrayList<>();
+			for (int i = 0; i < 3; i++) {
+				consumers.add(new Consumer(blockingQueue, s1, s2, accuracy, i + 1));
+			}
 
-//TODO need to stop PRODUCER after calc
-//        producer.join();
+			List<Future<BigDecimal>> f = executor.invokeAll(consumers);
+			executor.shutdown();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
 
-        return future;
-    }
+		ExecutorService executor = Executors.newFixedThreadPool(4);
+
+		Producer producer = new Producer(blockingQueue);
+		Consumer consumer = new Consumer(blockingQueue, s1, s2, accuracy, 1);
+
+		CompletableFuture.runAsync(producer, executor);
+		CompletableFuture<BigDecimal> future = CompletableFuture.supplyAsync(
+				consumer::call, executor
+		);
+		future.thenAcceptAsync(bigDecimal -> {
+			System.out.println("In callback");
+			producer.complete();});
+		executor.shutdown();
+
+		return future;
+	}
 
     /*
         public synchronized BigDecimal leibnizPi2(Integer accuracy) {
