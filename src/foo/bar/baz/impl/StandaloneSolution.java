@@ -6,6 +6,7 @@ import foo.bar.baz.Producer;
 import foo.bar.baz.Solution;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
