@@ -14,6 +14,7 @@ public class Producer implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Producer started. Thread: " + Thread.currentThread().getName());
         int n = 1;
         int lim = (int) (Math.pow(10, accuracy) * 2 + 12);
 
@@ -26,7 +27,7 @@ public class Producer implements Runnable {
             }
         }
 
-        System.out.println("Producer finished work " + n);
+        System.out.println("Producer finished. Thread: " + Thread.currentThread().getName());
 
     }
 }
