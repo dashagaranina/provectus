@@ -6,7 +6,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-public class Consumer implements Callable<BigDecimal> {
+public class Consumer2 implements Callable<BigDecimal> {
 
     private BlockingQueue<Integer> blockingQueue;
     private BigDecimal sum = BigDecimal.ZERO;
@@ -17,7 +17,7 @@ public class Consumer implements Callable<BigDecimal> {
         this.exit = true;
     }
 
-    public Consumer(BlockingQueue<Integer> blockingQueue) {
+    public Consumer2 (BlockingQueue<Integer> blockingQueue) {
         this.blockingQueue = blockingQueue;
     }
 
@@ -28,10 +28,11 @@ public class Consumer implements Callable<BigDecimal> {
         while (true) {
             try {
                 Integer n = blockingQueue.poll(1000, TimeUnit.MILLISECONDS);
+                System.out.println(n);
                 if (n == null) {
                     return sum;
                 }
-                BigDecimal calc = calc(BigDecimal.valueOf(n));
+                BigDecimal calc = calc(n);
                 if (n % 2 != 0) {
                     sum = sum.add(calc);
                 } else {
@@ -53,8 +54,10 @@ public class Consumer implements Callable<BigDecimal> {
 
     }
 
-    private synchronized BigDecimal calc(BigDecimal n) {
-        BigDecimal temp1 = BigDecimal.valueOf(2).multiply(n).subtract(BigDecimal.ONE); // 2*n-1
-        return BigDecimal.valueOf(4).divide(temp1, 1000, RoundingMode.HALF_UP);//4/(2*n-1)
+    private synchronized BigDecimal calc(Integer n) {
+        BigDecimal temp1 = BigDecimal.valueOf(2).multiply(BigDecimal.valueOf(n)).subtract(BigDecimal.ONE); // 2*n-1
+        BigDecimal temp2 = BigDecimal.valueOf(3).pow(n-1); //3^n-1
+        BigDecimal temp3 = temp1.multiply(temp2);//(2*n-1)* 3^n-1
+        return BigDecimal.ONE.divide(temp3, 1000, RoundingMode.HALF_UP);//1/(2*n-1)* 3^n-1
     }
 }

@@ -1,41 +1,32 @@
 package foo.bar.baz;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Random;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 public class Producer implements Runnable {
 
-	private BlockingQueue<Integer> blockingQueue;
+    private BlockingQueue<Integer> blockingQueue;
+    private Integer accuracy;
 
-	private Boolean calculated;
+    public Producer(BlockingQueue<Integer> blockingQueue, Integer accuracy) {
+        this.blockingQueue = blockingQueue;
+        this.accuracy = accuracy;
+    }
 
-	public Producer(BlockingQueue<Integer> blockingQueue) {
-		this.calculated = false;
-		this.blockingQueue = blockingQueue;
-	}
+    @Override
+    public void run() {
+        int n = 1;
+        int lim = (int) (Math.pow(10, accuracy) * 2 + 12);
 
-	public void complete() {
-		System.out.println("Completed from producer");
-		this.calculated = true;
-	}
+        while (n <= lim) {
+            try {
+                blockingQueue.put(n);
+                n++;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
-	@Override
-	public void run() {
-		int n = 1;
-		System.out.println("start producer");
-		do {
-			try {
-				blockingQueue.offer(n, 1000, TimeUnit.MILLISECONDS);
-				n = n + 1;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		} while (!calculated);
-		System.out.println("Producer finished work");
+        System.out.println("Producer finished work " + n);
 
-	}
+    }
 }
