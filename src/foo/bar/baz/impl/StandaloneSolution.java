@@ -1,50 +1,56 @@
 package foo.bar.baz.impl;
 
-import foo.bar.baz.Consumer2;
-import foo.bar.baz.Producer2;
+import foo.bar.baz.Consumer;
+import foo.bar.baz.Producer;
 import foo.bar.baz.Solution;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class StandaloneSolution implements Solution {
 
-    private BlockingQueue<BigInteger> blockingQueue = new ArrayBlockingQueue<>(1000);
+	private BlockingQueue<Integer> blockingQueue = new ArrayBlockingQueue<>(10);
 
-    @Override
-    public CompletableFuture<BigDecimal> leidnizPi(Integer accuracy) {
+	private volatile AtomicReference<BigDecimal> s1 = new AtomicReference<>(BigDecimal.ZERO);
+	private volatile AtomicReference<BigDecimal> s2 = new AtomicReference<>(BigDecimal.ZERO);
 
-        System.out.println("Current thread: " + Thread.currentThread().getName());
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-        Producer2 producer = new Producer2(blockingQueue, accuracy);
-        Consumer2 consumer = new Consumer2(blockingQueue);
-        CompletableFuture
-                .runAsync(producer, executor);
-//                .thenAccept(a -> consumer.exit());
-
-        CompletableFuture<BigDecimal> future = CompletableFuture.supplyAsync(consumer::call, executor);
-
-//        CompletableFuture<BigDecimal> future1 = CompletableFuture.supplyAsync(new Consumer2(blockingQueue)::call, executor);
-//        CompletableFuture<BigDecimal> future2 = CompletableFuture.supplyAsync(new Consumer2(blockingQueue)::call, executor);
-//        CompletableFuture<BigDecimal> future3 = CompletableFuture.supplyAsync(new Consumer2(blockingQueue)::call, executor);
-        /*List<CompletableFuture<BigDecimal>> futures = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            futures.add(CompletableFuture.supplyAsync(new Consumer2(blockingQueue)::call, executor));
-        }*/
-//        CompletableFuture<BigDecimal> future = futures.get(0).thenCombineAsync(futures.get(1), BigDecimal::add)
-//                .thenCombineAsync(futures.get(2), BigDecimal::add);//
-
-//   CompletableFuture<BigDecimal> future = future1.thenCombineAsync(future2, BigDecimal::add).thenCombineAsync(future3, BigDecimal::add);
+	@Override
+	public CompletableFuture<BigDecimal> leidnizPi(Integer accuracy) {
 
 
-        executor.shutdown();
-        return future;
-    }
+		/*try {
+			ExecutorService executor = Executors.newFixedThreadPool(4);
+
+			Producer producer = new Producer(blockingQueue);
+			executor.submit(producer);
+			List<Consumer> consumers = new ArrayList<>();
+			for (int i = 0; i < 3; i++) {
+				consumers.add(new Consumer(blockingQueue, s1, s2, accuracy, i + 1));
+			}
+
+			List<Future<BigDecimal>> f = executor.invokeAll(consumers);
+			executor.shutdown();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+
+		ExecutorService executor = Executors.newFixedThreadPool(4);
+
+		Producer producer = new Producer(blockingQueue);
+		Consumer consumer = new Consumer(blockingQueue, s1, s2, accuracy, 1);
+
+		CompletableFuture.runAsync(producer, executor);
+		CompletableFuture<BigDecimal> future = CompletableFuture.supplyAsync(
+				consumer::call, executor
+		);
+		future.thenAcceptAsync(bigDecimal -> {
+			System.out.println("In callback");
+			producer.complete();});
+		executor.shutdown();
+
+		return future;
+	}
 
     /*
         public synchronized BigDecimal leibnizPi2(Integer accuracy) {
