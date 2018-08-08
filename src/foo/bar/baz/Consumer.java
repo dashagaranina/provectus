@@ -10,7 +10,7 @@ public class Consumer extends AbstractConsumer {
         super(blockingQueue);
     }
 
-    public synchronized BigDecimal calc(Integer n) {
+    public BigDecimal calc(Integer n) {
         BigDecimal temp1 = BigDecimal.valueOf(2).multiply(BigDecimal.valueOf(n)).subtract(BigDecimal.ONE); // 2*n-1
         return BigDecimal.valueOf(4).divide(temp1, 1000, RoundingMode.DOWN);//4/(2*n-1)
     }
