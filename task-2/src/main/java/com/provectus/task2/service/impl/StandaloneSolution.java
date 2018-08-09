@@ -13,11 +13,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class StandaloneSolution implements Solution {
+public class StandaloneSolution {
 
     private BlockingQueue<Integer> blockingQueue = new ArrayBlockingQueue<>(1000);
 
-    @Override
+    public BigDecimal leibniz(Integer accuracy) {
+        return null;
+    }
+
+    @Async
     public CompletableFuture<BigDecimal> leibnizPi(Integer accuracy) {
         printCurrentThread();
         producer(accuracy);
@@ -41,7 +45,6 @@ public class StandaloneSolution implements Solution {
                 });
     }
 
-    @Override
     public CompletableFuture<BigDecimal> leibnizPi2(Integer accuracy) {
         printCurrentThread();
         producer(accuracy);
@@ -56,7 +59,7 @@ public class StandaloneSolution implements Solution {
      *
      * @param accuracy - the number of decimal places in the calculated Pi
      */
-    @Async("asyncExecutor")
+    //@Async("asyncExecutor")
     public void producer(Integer accuracy) {
         System.out.println("Producer started. Thread: " + Thread.currentThread().getName());
         int n = 1;
@@ -82,7 +85,7 @@ public class StandaloneSolution implements Solution {
      * @param accuracy - the number of decimal places in the calculated Pi
      * @return Pi
      */
-    @Async("asyncExecutor")
+    //@Async("asyncExecutor")
     public CompletableFuture<BigDecimal> consumer(Integer accuracy) {
         BigDecimal sum = BigDecimal.ZERO;
         System.out.println("Consumer started. Thread: " + Thread.currentThread().getName());

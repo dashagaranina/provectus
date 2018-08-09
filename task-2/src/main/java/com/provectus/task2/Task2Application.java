@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.Executor;
 
@@ -16,6 +17,13 @@ public class Task2Application {
         SpringApplication.run(Task2Application.class, args);
     }
 
+
+    @Bean
+    public RestTemplate restTemplate () {
+        return new RestTemplate();
+    }
+
+/*
     @Bean(name = "asyncExecutor")
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -25,5 +33,5 @@ public class Task2Application {
         executor.setThreadNamePrefix("AsynchThread-");
         executor.initialize();
         return executor;
-    }
+    }*/
 }

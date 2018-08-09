@@ -9,6 +9,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface Solution {
 
+    BigDecimal leibniz (Integer accuracy);
+
     /**
      * Asynchronous calculation Pi by Gregory-Leibniz formula.
      *

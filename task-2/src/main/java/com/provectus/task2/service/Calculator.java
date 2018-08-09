@@ -1,7 +1,9 @@
 package com.provectus.task2.service;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface Calculator {
 
-    String calculatePi (Integer accuracy);
+    CompletableFuture<String> calculatePi(Integer accuracy);
 
 }
