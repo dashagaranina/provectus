@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.provectus</groupId>
-    <artifactId>task2</artifactId>
+    <artifactId>master</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>task2</name>
-    <description>Provectus Task 2</description>
+    <name>master</name>
+    <description>Provectus Task 2: Master service for Distributed solution</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
