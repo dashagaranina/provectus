@@ -1,7 +1,7 @@
 package com.provectus.task2.service.impl;
 
 import com.provectus.task2.service.Solution;
-import com.provectus.task2.service.WorkerWrapper;
+import com.provectus.task2.client.wrapper.WorkerWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

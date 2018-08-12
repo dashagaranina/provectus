@@ -45,7 +45,6 @@ public class DistributedSolution implements Solution {
                 int x = tempL;
                 int y = i;
 
-//                log.info("Iteration: {}; x = {}, y = {}, left = {}, right = {}", i, x, y * n + left, left, right);
                 list.add(CompletableFuture.supplyAsync(() -> calculator.calculate(x, (y != THREAD_MAX) ? y * n + left : right)));
 
                 tempL = y * n + left + 1;

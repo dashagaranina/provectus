@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@Slf4j
 @Component
 public class Calculator {
 
