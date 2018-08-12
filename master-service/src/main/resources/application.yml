@@ -5,3 +5,12 @@ feign:
         connectTimeout: 60000
         readTimeout: 60000
         loggerLevel: basic
+
+# H2
+spring:
+  h2:
+    console:
+      enabled: true
+# Datasource
+  datasource:
+    name: masterdb

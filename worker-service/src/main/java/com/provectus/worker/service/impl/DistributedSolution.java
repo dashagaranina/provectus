@@ -53,9 +53,10 @@ public class DistributedSolution implements Solution {
                     .completedFuture(BigDecimal.ZERO), (f1, f2) -> f1
                     .thenCombineAsync(f2, BigDecimal::add)).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            throw new  RuntimeException(e);
+
         }
-        return BigDecimal.ZERO;
     }
 
 }

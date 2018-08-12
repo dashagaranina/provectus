@@ -1,38 +1,52 @@
 package com.provectus.task2.controller;
 
-import com.provectus.task2.model.Test;
-import com.provectus.task2.service.Calculator;
+import com.provectus.task2.model.Result;
 import com.provectus.task2.service.Solution;
+import com.provectus.task2.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+//@Api(description = "Blah blah.")
 public class CalculateController {
 
-    private final AtomicLong counter = new AtomicLong();
-
-//    private final Calculator calculator;
-
-    @Qualifier("distributedSolution")
     private final Solution solution;
+    private final StatisticService statistic;
 
-    @RequestMapping(value = "/pi")
-    public Test pi (@RequestParam(value = "accuracy", defaultValue = "5") Integer accuracy) {
-        long start = System.currentTimeMillis();
-//        CompletableFuture<String> result = calculator.calculatePi(accuracy);
-        BigDecimal result = solution.leibniz(accuracy);
-        long end = System.currentTimeMillis();
-        return new Test(counter.incrementAndGet(), result.toString(), (end - start));
+    @GetMapping(value = "/pi")
+//    @ApiOperation("${calculatecontroller.pi}")
+    public Integer pi (@RequestParam(value = "accuracy", defaultValue = "5") Integer accuracy) {
+        return solution.leibniz(accuracy);
     }
+
+
+    @GetMapping("/result/{id}")
+    public Result result(@PathVariable Integer id) {
+        return statistic.getResult(id);
+    }
+
+    @GetMapping("/statistic/count")
+    public Integer count () {
+        return statistic.count();
+    }
+
+    @GetMapping("/statistic/accuracy/{accuracy}")
+    public List<Result> count(@PathVariable("accuracy") Integer accuracy) {
+        return statistic.getAllByAccuracy(accuracy);
+    }
+
+    @GetMapping("statistic/result")
+    public List<Result> resultsAll () {
+        return statistic.getAll();
+    }
+
+
 }
