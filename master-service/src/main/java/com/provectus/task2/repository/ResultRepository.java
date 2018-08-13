@@ -10,4 +10,8 @@ import java.util.List;
 public interface ResultRepository  extends JpaRepository<Result, Integer> {
 
     List<Result> findByAccuracy (Integer accuracy);
+
+    List<Result> findTop5ByOrderByTimeSpendDesc();
+
+    List<Result> findTop5ByOrderByTimeSpend();
 }

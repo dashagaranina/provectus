@@ -30,9 +30,15 @@ public class StatisticServiceImpl implements StatisticService {
         return repository.findAll();
     }
 
+    @Override
+    public List<Result> getTop5Slowest(){
+        return repository.findTop5ByOrderByTimeSpendDesc();
+    }
 
     @Override
-    public Result getResult(Integer id) {
-        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Result with ID = " + id + " is not exists"));
+    public List<Result> getTop5Quickest() {
+        return repository.findTop5ByOrderByTimeSpend();
+
     }
+
 }

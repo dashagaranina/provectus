@@ -1,3 +1,9 @@
+#Worker service
+worker:
+  service:
+    count: 3
+
+#Feign client
 feign:
   client:
     config:

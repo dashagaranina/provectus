@@ -1,2 +1,0 @@
-calculatecontroller:
-  pi: Calculate PI for accurancy from params. Returns result ID

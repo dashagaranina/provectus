@@ -16,11 +16,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DistributedSolution implements Solution {
+
+    private AtomicLong counter = new AtomicLong();
 
     @Value("${worker.thread}")
     private Integer THREAD_MAX;
@@ -33,7 +36,7 @@ public class DistributedSolution implements Solution {
     @Override
     public BigDecimal leibnizPi(Integer left, Integer right) {
         try {
-            log.info("Worker: {}, left is {}, right is {}", environment.getProperty("server.port"), left, right);
+            log.info("Worker#{} request#{} : left is {}, right is {}", environment.getProperty("server.port"), counter.incrementAndGet(), left, right);
 
             Integer n = (right - left) / THREAD_MAX;
 

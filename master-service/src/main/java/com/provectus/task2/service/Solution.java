@@ -6,4 +6,6 @@ public interface Solution {
 
     Integer leibniz (Integer accuracy);
 
+    Result getResult (Integer id);
+
 }
