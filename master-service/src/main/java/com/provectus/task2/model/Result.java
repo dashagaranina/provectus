@@ -5,15 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Data
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 public class Result {
 
     @Id
+    @GeneratedValue
     private Integer id;
 
     private String result;
@@ -21,5 +21,17 @@ public class Result {
     private Integer accuracy;
 
     private Integer timeSpend;
+
+    public Result (){}
+
+    public Result(String result, Integer accuracy, Integer timeSpend) {
+
+        this.result = result;
+
+        this.accuracy = accuracy;
+
+        this.timeSpend = timeSpend;
+
+    }
 
 }

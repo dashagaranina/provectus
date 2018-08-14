@@ -1,0 +1,1 @@
+docker-compose up --scale workerserver=$1

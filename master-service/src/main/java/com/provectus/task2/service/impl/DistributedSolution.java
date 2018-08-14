@@ -24,8 +24,6 @@ public class DistributedSolution implements Solution {
     @Value("${worker.service.count}")
     private Integer WORKER_SERVICE_COUNT;
 
-    private final AtomicInteger counter = new AtomicInteger();
-
     private final ResultRepository repository;
 
     private final WorkerWrapper worker;
@@ -33,7 +31,8 @@ public class DistributedSolution implements Solution {
     @Override
     public Integer leibniz(Integer accuracy) {
 
-        Integer id = counter.incrementAndGet();
+        Result save = repository.save(new Result("result is calculating..", accuracy, 0));
+
         long start = System.currentTimeMillis();
 
         long lim = (long) (Math.pow(10, accuracy) * 2 + 12);
@@ -44,7 +43,7 @@ public class DistributedSolution implements Solution {
         int left = 1;
         for (int i = 1; i < WORKER_SERVICE_COUNT + 1; i++) {
             int right = i * n;
-            log.info("Worker#{} request#{}, left = {}, right = {}", i, id, left, right);
+            log.info("Worker#{} request#{}, left = {}, right = {}", i, save.getId(), left, right);
             list.add(worker.wrap(left, right));
             left = right + 1;
         }
@@ -53,8 +52,6 @@ public class DistributedSolution implements Solution {
                 .completedFuture(BigDecimal.ZERO), (f1, f2) -> f1
                 .thenCombineAsync(f2, BigDecimal::add))
                 .thenAcceptAsync(c -> {
-                    log.info("Request#{} value from CompletableFuture: {}", id, c.toString());
-
                     BigDecimal temp1 = BigDecimal.valueOf(2)
                             .multiply(BigDecimal.valueOf(lim))
                             .subtract(BigDecimal.ONE); // 2*lim-1
@@ -67,12 +64,17 @@ public class DistributedSolution implements Solution {
 
                     long end = System.currentTimeMillis();
 
-                    Result save = repository.save(new Result(id, pi.toString(), accuracy, (int) (end - start)));
+                    save.setResult(pi.toString());
+                    save.setTimeSpend((int) (end - start));
+                    Result result = repository.save(save);
 
-                    log.info("Request#{} result saved: {}", id, save.toString());
+                    log.info("Request#{} result saved: {}", result.getId(), result.toString());
+                })
+                .exceptionally(e -> {
+                    log.error(e.getLocalizedMessage());
+                    repository.delete(save);
+                    throw new RuntimeException(e);
                 });
-
-        Result save = repository.save(new Result(id, "result is calculating..", accuracy, 0));
 
         return save.getId();
     }

@@ -1,0 +1,25 @@
+##Worker service
+#worker:
+#  service:
+#    count: 3
+#
+##Feign client
+#feign:
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 60000
+#        readTimeout: 60000
+#        loggerLevel: basic
+
+## H2
+spring:
+  jpa:
+    properties.hibernate.temp.use_jdbc_metadata_defaults: false
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+  datasource:
+    name: masterdb

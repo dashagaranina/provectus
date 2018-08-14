@@ -3,3 +3,6 @@ server:
 
 worker:
   thread: 4
+
+management:
+  endpoints.web.exposure.include: env,health,info
