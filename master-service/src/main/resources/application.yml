@@ -12,11 +12,23 @@ feign:
         readTimeout: 60000
         loggerLevel: basic
 
-# H2
+## H2
+#spring:
+#  h2:
+#    console:
+#      enabled: true
+
+
 spring:
-  h2:
-    console:
-      enabled: true
-# Datasource
+  jpa:
+    properties.hibernate.temp.use_jdbc_metadata_defaults: false
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+# Postgresql Datasource
   datasource:
-    name: masterdb
+    driverClassName: org.postgresql.Driver
+    platform: postgres
+    url: "jdbc:postgresql://database:5432/masterdb"
+    username: postgres
+    password: postgres

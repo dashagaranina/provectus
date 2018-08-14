@@ -1,0 +1,41 @@
+version: '3'
+services:
+  eurekaserver:
+    image:   dariagaran/eureka:tag
+    ports:
+      - "8761:8761"
+  workerserver:
+    image:   dariagaran/worker:tag
+    ports:
+        - "8081-8086:8081-8086"
+    environment:
+      EUREKASERVER_PORT: "8761"
+      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+    deploy:
+      mode: replicated
+      replicas: 3
+      update_config:
+              parallelism: 2
+              delay: 10s
+    depends_on:
+      - eurekaserver
+  database:
+    image: postgres:9.5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "masterdb"
+  masterservice:
+    image: dariagaran/master:tag
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASESERVER_PORT: "5432"
+      WORKERSERVER_PORT: "8081"
+      EUREKASERVER_PORT: "8761"
+      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+    depends_on:
+      - eurekaserver
+      - workerserver

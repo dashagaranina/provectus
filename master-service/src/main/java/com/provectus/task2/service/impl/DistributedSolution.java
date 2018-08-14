@@ -52,7 +52,7 @@ public class DistributedSolution implements Solution {
         list.stream().reduce(CompletableFuture
                 .completedFuture(BigDecimal.ZERO), (f1, f2) -> f1
                 .thenCombineAsync(f2, BigDecimal::add))
-                .thenAccept(c -> {
+                .thenAcceptAsync(c -> {
                     log.info("Request#{} value from CompletableFuture: {}", id, c.toString());
 
                     BigDecimal temp1 = BigDecimal.valueOf(2)

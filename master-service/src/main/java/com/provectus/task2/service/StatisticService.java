@@ -7,9 +7,10 @@ import java.util.List;
 public interface StatisticService {
 
     Integer count ();
-    List<Result> getAllByAccuracy(Integer accuracy);
-    List<Result> getAll();
 
+    List<Result> getAllByAccuracy(Integer accuracy);
+
+    List<Result> getAll();
 
     List<Result> getTop5Slowest();
 
