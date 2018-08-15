@@ -19,7 +19,7 @@
     <properties>
         <swagger.version>2.9.2</swagger.version>
         <docker.image.name>dariagaran/master</docker.image.name>
-        <docker.image.tag>tag</docker.image.tag>
+        <docker.image.tag>${project.version}</docker.image.tag>
     </properties>
 
     <dependencies>
