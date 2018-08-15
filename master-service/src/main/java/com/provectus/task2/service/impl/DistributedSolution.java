@@ -30,7 +30,7 @@ public class DistributedSolution implements Solution {
     @Override
     public Integer leibniz(Integer accuracy) {
 
-        Result save = repository.save(new Result("result is calculating..", accuracy, 0));
+        Result save = repository.save(new Result(null, accuracy, 0));
 
         long start = System.currentTimeMillis();
 
