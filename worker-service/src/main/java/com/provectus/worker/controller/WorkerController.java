@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Slf4j
 @RestController
@@ -27,7 +28,7 @@ public class WorkerController {
                                  @RequestParam Integer right){
 
         BigDecimal result = solution.leibnizPi(left, right);
-        log.info("Calculation for [{}, {}] is done.", left, right);
+        log.info("Calculation for [{}, {}] is done. Result {}", left, right, result.setScale(3, RoundingMode.DOWN).toString());
         return result;
     }
 
