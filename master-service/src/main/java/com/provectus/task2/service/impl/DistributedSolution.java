@@ -14,7 +14,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -52,6 +51,7 @@ public class DistributedSolution implements Solution {
                 .completedFuture(BigDecimal.ZERO), (f1, f2) -> f1
                 .thenCombineAsync(f2, BigDecimal::add))
                 .thenAcceptAsync(c -> {
+                    log.info("Value {}", c.setScale(5, RoundingMode.DOWN).toString());
                     BigDecimal temp1 = BigDecimal.valueOf(2)
                             .multiply(BigDecimal.valueOf(lim))
                             .subtract(BigDecimal.ONE); // 2*lim-1

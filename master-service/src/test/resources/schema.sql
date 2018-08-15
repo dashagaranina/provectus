@@ -1,1 +1,1 @@
-CREATE SCHEMA masterdb;
+CREATE SCHEMA master;

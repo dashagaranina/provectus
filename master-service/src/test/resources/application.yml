@@ -1,9 +1,9 @@
 ##Worker service
-#worker:
-#  service:
-#    count: 3
-#
-##Feign client
+worker:
+  service:
+    count: 3
+
+#Feign client
 #feign:
 #  client:
 #    config:
@@ -22,4 +22,12 @@ spring:
     console:
       enabled: true
   datasource:
-    name: masterdb
+    url: "jdbc:h2:mem:masterdb"
+    driver-class-name: org.h2.Driver
+    username: master
+    password:
+
+
+eureka:
+  client:
+    enabled: false
