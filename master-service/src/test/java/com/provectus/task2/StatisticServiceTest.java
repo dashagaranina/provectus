@@ -6,22 +6,12 @@ import com.provectus.task2.service.StatisticService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ComponentScan(basePackages = "com.provectus.task2.service")
-@EnableJpaRepositories(basePackages = "com.provectus.task2.repository")
-@EntityScan(basePackages = "com.provectus.task2.model")
-public class StatisticServiceTest {
+
+public class StatisticServiceTest extends AbstractTest {
 
     private static final Result RESULT_1 = new Result("3.14", 2, 100);
     private static final Result RESULT_2 = new Result("3.14", 2, 200);
@@ -38,6 +28,7 @@ public class StatisticServiceTest {
 
     @Before
     public void before() {
+        repository.deleteAll();
         repository.save(RESULT_1);
         repository.save(RESULT_2);
         repository.save(RESULT_3);
@@ -73,14 +64,14 @@ public class StatisticServiceTest {
         List<Result> top5Slowest = statisticService.getTop5Slowest();
         Assert.assertNotNull(top5Slowest);
         Assert.assertEquals(top5Slowest.size(), 5);
-        Assert.assertEquals(top5Slowest.get(0), RESULT_6);
+        Assert.assertEquals(top5Slowest.get(0).getTimeSpend(), RESULT_6.getTimeSpend());
     }
     @Test
     public void testGetTop5Quickest() {
         List<Result> top5Quickest = statisticService.getTop5Quickest();
         Assert.assertNotNull(top5Quickest);
         Assert.assertEquals(top5Quickest.size(), 5);
-        Assert.assertEquals(top5Quickest.get(0), RESULT_1);
+        Assert.assertEquals(top5Quickest.get(0).getTimeSpend(), RESULT_1.getTimeSpend());
     }
 
 }
