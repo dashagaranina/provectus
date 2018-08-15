@@ -48,6 +48,8 @@ A response of the request is a result identificator (ID). Someone can gets the r
 }`
  
 That means: ID - the result identificator, result = calculated Pi, accuracy - requested accuracy, timeSpend - a milliseconds which were spent for calculating.
+
+`Master` knows about count of `Worker` instances. It confugires in `application.yml` file (see `worker.service.count` property.
  
 `Master` service uses `Feign Client` and `Ribbon` for conversation with `Worker` service instances. `Feign Client` gives a simple interface for requests without using the `RestTemplate` object. `Ribbon` gets a request to `Worker` service, goes to `Eureka`, asks it about `Worker` instances and locations, and when makes a request to less loaded `Worker` server. 
 
@@ -63,14 +65,24 @@ When `Worker` is done and responses, `Master` gets a result in `CompletableFutur
 `Master` also allows you to get requests and results statistics. It has methods to count and get all results, to get a list of results by an accuracy, to get Top 5 fastest and slowest results of Pi calculations.
 
 ## Worker service
-The service returns the intermediate sums of the Gregory-Leibniz series on a given interval. `Worker` calculates the sums asynchronous also using `CompletableFuture` object features.
+The service returns the intermediate sums of the Gregory-Leibniz series on a given interval. `Worker` calculates the sums asynchronous also using `CompletableFuture` object features. Also you can configure how many threads will work under sums calculations in `application.yml` file (see `worker.thread` property).
 
 ## Tests
 All services have unit or/and integration tests. You can run them from IDE or using `mvn test` command from a terminal or run .scripts/build_tests.sh (for build the project without test skipping) or .scripts/starts_tests.sh (for build and run docker composition after all tests pass)
 
 ## Build, deploy and run
-For build, deploy and run the applicatoins you need to install Apache Maven (to the path variables too) and the Docker platform.
-You can find all necessary scripts to build and run docker containers in the [scripts](https://github.com/dashagaranina/provectus/tree/master/scripts). Run .sh file from the project root.
+For build, deploy and run the applicatoins you need to install Apache Maven (to the path variables too) and the Docker platform. 
+
+Please, before the project building, update properties: `docker.image.name` and `docker.image.tag` in the each `pom.xml` file of eureka, master and worker modules.
+
+You can find all necessary scripts to build and run docker containers in the [scripts](https://github.com/dashagaranina/provectus/tree/master/scripts). Run .sh file from the project root:
+- ./scripts/build.sh - build all modules and docker images.
+- ./scripts/build_tests.sh - like build.sh but also run the tests.
+- ./scripts/docker_start.sh - startups a docker composition with all the images. One required param - a number of the `Workers`
+- ./scripts/start.sh - builds (skip tests) and startups all the services.One required param - a number of the `Workers`.
+- ./scripts/start_tests.sh - builds (runs tests) and startups all the services.One required param - a number of the `Workers`.
+- ./scripts.stop.sh - shutdown all docker containers.
+- ./scripts/start.sh - builds (skip tests) and startups all the services.One required param - a number of the `Workers`.
 
 Check a system status, an information about instances and etc. from [Eureka web interface](http://localhost:8761/) 
 
