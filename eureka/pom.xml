@@ -19,7 +19,7 @@
 
 	<properties>
 		<docker.image.name>dariagaran/eureka</docker.image.name>
-		<docker.image.tag>${project.version}</docker.image.tag>
+		<docker.image.tag>tag</docker.image.tag>
 	</properties>
 
 	<dependencies>
