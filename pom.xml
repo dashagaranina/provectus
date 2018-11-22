@@ -29,6 +29,7 @@
         <module>master-service</module>
         <module>worker-service</module>
         <module>eureka</module>
+        <module>standalone</module>
     </modules>
 
     <dependencies>

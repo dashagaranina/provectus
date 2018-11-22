@@ -12,7 +12,7 @@ Please create two different solutions described below.
 See in [Standalone](https://github.com/dashagaranina/provectus/tree/master/standalone)
 
 ## Task 2. Distributed solution
-Create `DistributedSolution` application (implements `foo.bar.baz.Solution`) that uses a cluster of three `Worker` applications to calculate the PI number in a distributed manner.
+Create `DistributedSolution` application (implements `main.java.foo.bar.baz.Solution`) that uses a cluster of three `Worker` applications to calculate the PI number in a distributed manner.
 All requests to Workers should be asynchronous, meaning the caller side doesn't wait for a completion of a job. You are free to introduce any intermediary applications on need.
 
 Application should work on Spring Boot 2, save a calculation result and a request statistic (to Master) into database, and should have Rest API for requests to get the statistic. Also preferable to use Docker container platform.

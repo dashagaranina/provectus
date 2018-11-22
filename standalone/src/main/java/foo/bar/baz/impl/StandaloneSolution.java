@@ -1,9 +1,9 @@
 package foo.bar.baz.impl;
 
+import foo.bar.baz.Solution;
 import foo.bar.baz.Consumer;
 import foo.bar.baz.Consumer2;
 import foo.bar.baz.Producer;
-import foo.bar.baz.Solution;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
